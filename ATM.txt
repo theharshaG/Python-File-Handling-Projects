@@ -1,0 +1,80 @@
+while True:
+
+    print("\n----- ATM SYSTEM -----")
+    print("1 Login")
+    print("2 Exit")
+
+    choice = input("Enter choice: ")
+
+    if choice == "1":
+
+        username = input("Enter username: ")
+        pin = input("Enter PIN: ")
+
+        found = False
+
+        with open("accounts.txt", "r") as file:
+            accounts = file.readlines()
+
+        for line in accounts:
+            user, p, balance = line.split()
+
+            if user == username and p == pin:
+                found = True
+                balance = int(balance)
+
+                while True:
+
+                    print("\n--- ATM MENU ---")
+                    print("1 Check Balance")
+                    print("2 Deposit")
+                    print("3 Withdraw")
+                    print("4 Logout")
+
+                    option = input("Enter option: ")
+
+                    if option == "1":
+                        print("Your Balance:", balance)
+
+                    elif option == "2":
+                        amount = int(input("Enter amount to deposit: "))
+                        balance += amount
+                        print("Deposit successful")
+
+                    elif option == "3":
+                        amount = int(input("Enter amount to withdraw: "))
+
+                        if amount > balance:
+                            print("Insufficient balance")
+                        else:
+                            balance -= amount
+                            print("Withdrawal successful")
+
+                    elif option == "4":
+                        break
+
+                    else:
+                        print("Invalid option")
+
+                updated_accounts = []
+
+                for line in accounts:
+                    user2, p2, bal2 = line.split()
+
+                    if user2 == username:
+                        updated_accounts.append(f"{user2} {p2} {balance}\n")
+                    else:
+                        updated_accounts.append(line)
+
+                with open("accounts.txt", "w") as file:
+                    file.writelines(updated_accounts)
+
+        if not found:
+            print("Invalid username or PIN")
+
+    elif choice == "2":
+        print("Thank you for using ATM")
+        break
+
+    else:
+        print("Invalid choice")

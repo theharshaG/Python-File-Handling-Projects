@@ -1,0 +1,97 @@
+while True:
+    print("\n1: Show Books list: ")
+    print("2: Add Book")
+    print("3: Borrow Book")
+    print("4: Return Book")
+    print("5: Search Book")
+    print("6: Exit")
+    choice=input("Choose a Number from [1-6]:  ")
+    if choice=="1":
+        with open("books.txt","r") as file:
+            show=file.readlines()
+
+        print("\nList of Books")
+        for book in show:
+            print(book.strip())
+
+    if choice=="2":
+        book=input("Enter the Book details that you want to Add \n")
+        with open("books.txt","a") as file:
+            file.write(book+"\n")
+            print("Book is Successfully Added")
+
+    if choice == "3":
+        book = input("Enter the book you want to borrow:\n")
+
+        with open("books.txt", "r") as file:
+            books = file.readlines()
+
+        updated_books = []
+        found = False
+
+        for line in books:
+            text = line.strip()
+
+            if text.lower() == book.lower():
+                found = True
+                text = text + " borrowed"
+                print("Book borrowed successfully")
+
+            elif text.lower() == (book + " borrowed").lower():
+                found = True
+                print("Book already borrowed")
+
+            updated_books.append(text + "\n")
+
+        if not found:
+            print("Book not found")
+
+        with open("books.txt", "w") as file:
+            file.writelines(updated_books)
+
+    if choice == "4":
+        book = input("Enter the book you want to return:\n")
+
+        with open("books.txt", "r") as file:
+            books = file.readlines()
+
+        updated_books = []
+        found = False
+
+        for line in books:
+            text = line.strip()
+
+            if text.lower() == (book + " borrowed").lower():
+                found = True
+                text = book
+                print("Book returned successfully")
+
+            updated_books.append(text + "\n")
+
+        if not found:
+            print("This book was not borrowed or not found")
+
+        with open("books.txt", "w") as file:
+            file.writelines(updated_books)
+
+    if choice == "5":
+        book = input("Enter the book you want to search:\n")
+
+        found = False
+
+        with open("books.txt", "r") as file:
+            books = file.readlines()
+
+        for line in books:
+            text = line.strip()
+
+            if book.lower() in text.lower():
+                print("Book found:", text)
+                found = True
+
+        if not found:
+            print("Book not found")
+
+    if choice == "6":
+        print("Thank you for using the Library System")
+        break

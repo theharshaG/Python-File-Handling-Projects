@@ -1,0 +1,147 @@
+while True:
+
+    print("\n1 Add Contact")
+    print("2 Show Contacts")
+    print("3 Search Contact")
+    print("4 Delete Contact")
+    print("5 Update Contact")
+    print("6 Exit")
+
+    choice = input("Enter the choice [1-6]: ")
+
+
+
+    if choice == "1":
+        contact = input("Enter the name: ")
+        num = input("Enter the number: ")
+
+
+        if not num.isdigit() or len(num) != 10:
+            print("Invalid phone number. Must be 10 digits.")
+            continue
+
+        duplicate = False
+        try:
+            with open("contact.txt", "r") as file:
+                for line in file:
+                    name, number = line.split()
+                    if name.lower() == contact.lower():
+                        duplicate = True
+                        break
+        except FileNotFoundError:
+            pass
+
+        if duplicate:
+            print("Contact already exists")
+        else:
+            with open("contact.txt", "a") as file:
+                file.write(contact + " " + num + "\n")
+
+            print("Contact added successfully")
+
+
+
+    elif choice == "2":
+        try:
+            with open("contact.txt", "r") as file:
+                lines = file.readlines()
+
+            print("\nContact List:")
+
+            for line in lines:
+                print(line.strip())
+
+            print("Total contacts:", len(lines))
+
+        except FileNotFoundError:
+            print("No contacts found")
+
+
+
+    elif choice == "3":
+        search = input("Enter the name: ")
+        found = False
+
+        try:
+            with open("contact.txt", "r") as file:
+                for line in file:
+                    if search.lower() in line.lower():
+                        print("Contact found:")
+                        print(line)
+                        found = True
+
+            if not found:
+                print("Contact not found")
+
+        except FileNotFoundError:
+            print("No contacts found")
+
+
+
+    elif choice == "4":
+        name_to_delete = input("Enter contact name to delete: ")
+
+        confirm = input("Are you sure? (y/n): ")
+
+        if confirm.lower() != "y":
+            print("Deletion cancelled")
+            continue
+
+        try:
+            with open("contact.txt", "r") as file:
+                lines = file.readlines()
+
+            with open("contact.txt", "w") as file:
+                for line in lines:
+                    contact, num = line.split()
+
+                    if contact.lower() != name_to_delete.lower():
+                        file.write(line)
+
+            print("Contact deleted successfully")
+
+        except FileNotFoundError:
+            print("No contacts found")
+
+
+
+    elif choice == "5":
+        name_to_update = input("Enter contact name to update: ")
+        found = False
+
+        try:
+            with open("contact.txt", "r") as file:
+                lines = file.readlines()
+
+            with open("contact.txt", "w") as file:
+                for line in lines:
+                    contact, num = line.split()
+
+                    if contact.lower() == name_to_update.lower():
+                        new_num = input("Enter new number: ")
+
+                        if not new_num.isdigit() or len(new_num) != 10:
+                            print("Invalid number. Update cancelled.")
+                            file.write(line)
+                        else:
+                            file.write(contact + " " + new_num + "\n")
+                            found = True
+                            print("Contact updated successfully")
+
+                    else:
+                        file.write(line)
+
+            if not found:
+                print("Contact not found")
+
+        except FileNotFoundError:
+            print("No contacts found")
+
+
+
+    elif choice == "6":
+        print("Good bye")
+        break
+
+    else:
+        print("Invalid choice")
